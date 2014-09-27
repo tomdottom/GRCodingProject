@@ -31,6 +31,13 @@ class Restaurant(models.Model):
         tables = reduce(lambda x, y: '%s,%s' % (x, y), tables)
         self._tables = tables
 
+    def is_open(self, dt):
+        ot = self   .opening_times.filter(weekday=dt.day).first()
+        return ot.fromHour < dt.time() < ot.toHour
+
+    def is_closed(self, dt):
+        return not self.is_open(dt)
+
 
 class OpeningTime(models.Model):
 

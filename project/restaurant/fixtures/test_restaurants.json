@@ -1,0 +1,74 @@
+[
+    {
+      "model": "restaurant.restaurant",
+      "pk": 1,
+      "fields": {
+        "name": "Small",
+        "description": "An amazing family run restaurant in Maida Vale",
+        "_tables": "2,2,4,4"
+      }
+    },
+    {
+      "model": "restaurant.openingtime",
+      "fields": {
+        "fromHour": "11:00:00",
+        "toHour": "22:00:00",
+        "weekday": 1,
+        "restaurant": 1
+      }
+    },
+    {
+      "model": "restaurant.openingtime",
+      "fields": {
+        "fromHour": "11:00:00",
+        "toHour": "22:00:00",
+        "weekday": 2,
+        "restaurant": 1
+      }
+    },
+    {
+      "model": "restaurant.openingtime",
+      "fields": {
+        "fromHour": "11:00:00",
+        "toHour": "22:00:00",
+        "weekday": 3,
+        "restaurant": 1
+      }
+    },
+    {
+      "model": "restaurant.openingtime",
+      "fields": {
+        "fromHour": "11:00:00",
+        "toHour": "22:00:00",
+        "weekday": 4,
+        "restaurant": 1
+      }
+    },
+    {
+      "model": "restaurant.openingtime",
+      "fields": {
+        "fromHour": "10:00:00",
+        "toHour": "23:59:59",
+        "weekday": 5,
+        "restaurant": 1
+      }
+    },
+    {
+      "model": "restaurant.openingtime",
+      "fields": {
+        "fromHour": "10:00:00",
+        "toHour": "23:59:59",
+        "weekday": 6,
+        "restaurant": 1
+      }
+    },
+    {
+      "model": "restaurant.openingtime",
+      "fields": {
+        "fromHour": "10:00:00",
+        "toHour": "23:59:59",
+        "weekday": 7,
+        "restaurant": 1
+      }
+    }
+]
