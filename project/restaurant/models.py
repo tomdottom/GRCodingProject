@@ -52,6 +52,15 @@ class Restaurant(models.Model):
             ).order_by('people')
         )
 
+    def reservations_on_date(self, date):
+        return list(
+            self.reservations.filter(
+                datetime__year=date.year,
+                datetime__month=date.month,
+                datetime__day=date.day
+            )
+        )
+
 
 class OpeningTime(models.Model):
 
