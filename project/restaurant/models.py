@@ -1,5 +1,7 @@
 from django.db import models
 
+from datetime import timedelta
+
 # isoweekday
 WEEKDAYS = [
     (1, "Monday"),
@@ -32,11 +34,23 @@ class Restaurant(models.Model):
         self._tables = tables
 
     def is_open(self, dt):
-        ot = self   .opening_times.filter(weekday=dt.day).first()
+        ot = self.opening_times.filter(weekday=dt.isoweekday()).first()
+        if ot is None:
+            return False
         return ot.fromHour < dt.time() < ot.toHour
 
     def is_closed(self, dt):
         return not self.is_open(dt)
+
+    def reservations_ongoing(self, datetime):
+        reservation_duration = timedelta(hours=1.5)
+
+        return list(
+            self.reservations.filter(
+                datetime__gte=(datetime - reservation_duration),
+                datetime__lte=(datetime + reservation_duration)
+            ).order_by('people')
+        )
 
 
 class OpeningTime(models.Model):

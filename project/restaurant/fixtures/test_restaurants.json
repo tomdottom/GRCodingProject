@@ -13,15 +13,6 @@
       "fields": {
         "fromHour": "11:00:00",
         "toHour": "22:00:00",
-        "weekday": 1,
-        "restaurant": 1
-      }
-    },
-    {
-      "model": "restaurant.openingtime",
-      "fields": {
-        "fromHour": "11:00:00",
-        "toHour": "22:00:00",
         "weekday": 2,
         "restaurant": 1
       }
