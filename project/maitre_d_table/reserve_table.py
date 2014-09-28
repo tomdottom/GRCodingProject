@@ -59,6 +59,9 @@ def reserve_table(restaurant_name, dt, people):
         people=people
     )
 
+    if restaurant.is_closed(new_res.endtime):
+        raise ReservationNotPossibleError
+
     if table_available(current_reservations + [new_res], restaurant.tables):
         new_res.save()
         return new_res.id

@@ -33,6 +33,12 @@ class TestReserveTable(TransactionTestCase):
         with self.assertRaises(RestaurantClosedError):
             reserve_table('Small', time, 3)
 
+    def test_raises_error_if_reservation_will_run_past_closing_time(self):
+        time = datetime.datetime(2014, 3, 4, 21, 30)
+
+        with self.assertRaises(ReservationNotPossibleError):
+            reserve_table('Small', time, 3)
+
     def test_raises_error_if_no_table_large_enough_to_accomodate_party(self):
         time = datetime.datetime(2014, 3, 4, 13, 30)
 
