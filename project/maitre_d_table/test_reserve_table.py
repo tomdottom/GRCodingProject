@@ -1,4 +1,5 @@
 import datetime
+import pytz
 
 from django.test import TransactionTestCase
 
@@ -65,3 +66,13 @@ class TestReserveTable(TransactionTestCase):
 
         with self.assertRaises(ReservationNotPossibleError):
             reserve_table('Small', time, 2)
+
+    def test_saves_as_utc_if_naive_datetime_used(self):
+        naive_dt = datetime.datetime(2014, 3, 4, 13, 30)
+
+        reserve_table('Small', naive_dt, 2)
+
+        restaurant = Restaurant.objects.get(name='Small')
+        reservation = restaurant.reservations.first()
+
+        reservation.datetime.tzinfo == pytz.utc

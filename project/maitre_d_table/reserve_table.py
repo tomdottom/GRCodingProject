@@ -1,7 +1,8 @@
+from operator import attrgetter
+import pytz
+
 from restaurant.models import Restaurant
 from reservation.models import Reservation
-
-from operator import attrgetter
 
 
 class RestaurantClosedError(Exception):
@@ -35,23 +36,26 @@ def table_available(reservation_list, tables):
     return True
 
 
-def reserve_table(restaurant_name, time, people):
+def reserve_table(restaurant_name, dt, people):
+
+    if dt.tzinfo is None:
+        dt = pytz.utc.localize(dt)
     try:
         restaurant = Restaurant.objects.get(name=restaurant_name)
     except Restaurant.DoesNotExist:
         raise NoSuchRestaurantError
 
-    if restaurant.is_closed(time):
+    if restaurant.is_closed(dt):
         raise RestaurantClosedError
 
     if max(restaurant.tables) < people:
         raise NoTableLargeEnoughError
 
-    current_reservations = restaurant.reservations_ongoing(time)
+    current_reservations = restaurant.reservations_ongoing(dt)
 
     new_res = Reservation(
         restaurant=restaurant,
-        datetime=time,
+        datetime=dt,
         people=people
     )
 
