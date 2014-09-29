@@ -5,8 +5,7 @@ from django.test import TransactionTestCase
 
 from reserve_table import (
     reserve_table,
-    RestaurantClosedError, NoSuchRestaurantError, NoTableLargeEnoughError,
-    ReservationNotPossibleError
+    RestaurantClosedError, NoSuchRestaurantError, ReservationNotPossibleError
 )
 from restaurant.models import Restaurant
 
@@ -18,10 +17,15 @@ class TestReserveTable(TransactionTestCase):
     def test_raises_error_for_non_existant_restaurant(self):
         time = datetime.datetime(2014, 3, 4, 02, 30)
 
-        with self.assertRaises(NoSuchRestaurantError):
+        with self.assertRaises(NoSuchRestaurantError) as e:
             reserve_table('No Name', time, 3)
 
-    def test_raises_error_when_restaurant_closed_afterhours(self):
+        self.assertEqual(
+            e.exception.args[0],
+            "Could not retrieve restaurant named No Name"
+        )
+
+    def test_raises_error_if_reservation_begins_when_restaurant_closed(self):
         time = datetime.datetime(2014, 3, 4, 02, 30)
 
         with self.assertRaises(RestaurantClosedError):
@@ -42,8 +46,13 @@ class TestReserveTable(TransactionTestCase):
     def test_raises_error_if_no_table_large_enough_to_accomodate_party(self):
         time = datetime.datetime(2014, 3, 4, 13, 30)
 
-        with self.assertRaises(NoTableLargeEnoughError):
+        with self.assertRaises(ReservationNotPossibleError) as e:
             reserve_table('Small', time, 10)
+
+        self.assertEqual(
+            e.exception.args[0],
+            "No table large enough to accomodate 10 poeple"
+        )
 
     def test_creates_new_reservation(self):
         time = datetime.datetime(2014, 3, 4, 13, 30)
@@ -70,8 +79,13 @@ class TestReserveTable(TransactionTestCase):
         reserve_table('Small', time, 4)
         reserve_table('Small', time, 4)
 
-        with self.assertRaises(ReservationNotPossibleError):
+        with self.assertRaises(ReservationNotPossibleError) as e:
             reserve_table('Small', time, 2)
+
+        self.assertEqual(
+            e.exception.args[0],
+            "No table large enough is available to accomodate 2 people"
+        )
 
     def test_saves_as_utc_if_naive_datetime_used(self):
         naive_dt = datetime.datetime(2014, 3, 4, 13, 30)

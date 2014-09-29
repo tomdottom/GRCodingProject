@@ -13,10 +13,6 @@ class NoSuchRestaurantError(Exception):
     pass
 
 
-class NoTableLargeEnoughError(Exception):
-    pass
-
-
 class ReservationNotPossibleError(Exception):
     pass
 
@@ -43,13 +39,17 @@ def reserve_table(restaurant_name, dt, people):
     try:
         restaurant = Restaurant.objects.get(name=restaurant_name)
     except Restaurant.DoesNotExist:
-        raise NoSuchRestaurantError
+        raise NoSuchRestaurantError(
+            "Could not retrieve restaurant named %s" % (restaurant_name, )
+        )
 
     if restaurant.is_closed(dt):
         raise RestaurantClosedError
 
     if max(restaurant.tables) < people:
-        raise NoTableLargeEnoughError
+        raise ReservationNotPossibleError(
+            "No table large enough to accomodate %s poeple" % (people, )
+        )
 
     current_reservations = restaurant.reservations_ongoing(dt)
 
@@ -65,5 +65,10 @@ def reserve_table(restaurant_name, dt, people):
     if table_available(current_reservations + [new_res], restaurant.tables):
         new_res.save()
         return new_res.id
+    else:
+        raise ReservationNotPossibleError(
+            "No table large enough is available to accomodate %s people" % (
+                people, )
+        )
 
     raise ReservationNotPossibleError
