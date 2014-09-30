@@ -52,7 +52,7 @@ Use maitre d'table
 	>> {'covers': 12}
 	
 
-##Known edges cases in code
+##Known edge cases in code
 
 The table packing algorithm is naive to the fact that some tables may already be seated. Currently it is possible for reservations to be made such that, on the arrival of a new table, all tables would have to stand and rearrange themselves for seating to be possible.
 
