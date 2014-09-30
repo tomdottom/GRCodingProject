@@ -47,11 +47,11 @@ class TestReserveTable(TransactionTestCase):
         time = datetime.datetime(2014, 3, 4, 13, 30)
 
         with self.assertRaises(ReservationNotPossibleError) as e:
-            reserve_table('Small', time, 10)
+            reserve_table('Small', time, 13)
 
         self.assertEqual(
             e.exception.args[0],
-            "No table large enough to accomodate 10 poeple"
+            "Not enough tables available to accomodate 13 people"
         )
 
     def test_creates_new_reservation(self):
@@ -84,7 +84,7 @@ class TestReserveTable(TransactionTestCase):
 
         self.assertEqual(
             e.exception.args[0],
-            "No table large enough is available to accomodate 2 people"
+            "Not enough tables available to accomodate 2 people"
         )
 
     def test_saves_as_utc_if_naive_datetime_used(self):
@@ -96,3 +96,11 @@ class TestReserveTable(TransactionTestCase):
         reservation = restaurant.reservations.first()
 
         reservation.datetime.tzinfo == pytz.utc
+
+    def test_can_book_accross_multiple_tables(self):
+        time = datetime.datetime(2014, 3, 4, 13, 30)
+
+        reserve_table('Small', time, 2)
+        reservation = reserve_table('Small', time, 10)
+
+        self.assertIsInstance(reservation, int)

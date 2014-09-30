@@ -99,11 +99,6 @@ def reserve_table(restaurant_name, dt, people):
     if restaurant.is_closed(dt):
         raise RestaurantClosedError
 
-    if max(restaurant.tables) < people:
-        raise ReservationNotPossibleError(
-            "No table large enough to accomodate %s poeple" % (people, )
-        )
-
     current_reservations = restaurant.reservations_ongoing(dt)
 
     new_res = Reservation(
@@ -121,7 +116,7 @@ def reserve_table(restaurant_name, dt, people):
         return new_res.id
     except UnableToPackTablesError:
         raise ReservationNotPossibleError(
-            "No table large enough is available to accomodate %s people" % (
+            "Not enough tables available to accomodate %s people" % (
                 people, )
         )
 
