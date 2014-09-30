@@ -1,0 +1,7 @@
+Django==1.7
+execnet==1.2.0
+ipdb==0.8
+ipython==2.2.0
+py==1.4.25
+pytz==2014.7
+wsgiref==0.1.2
