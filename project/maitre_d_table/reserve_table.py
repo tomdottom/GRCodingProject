@@ -21,26 +21,27 @@ class UnableToPackTablesError(Exception):
     pass
 
 
-def pack_table(reservation_list, table_list):
+def pack_tables(reservation_list, table_list):
     sorted_res = sorted(reservation_list, key=attrgetter('people'))
     sorted_tables = sorted(table_list)
 
     packed_tables = []
 
-    for max_tables in range(1, len(sorted_tables)+1):
-        for res in sorted_res:
-            tables = match_tables_to_reservation(
-                res, sorted_tables, max_tables)
+    for allow_table_error in range(2):
+        for max_tables in range(1, len(sorted_tables)+1):
+            for res in sorted_res:
+                tables = match_tables_to_reservation(
+                    res, sorted_tables, max_tables, allow_table_error)
 
-            if tables is not None:
-                for t in tables:
-                    sorted_tables.remove(t)
-                packed_tables.append((res, tables))
-        for table in packed_tables:
-            try:
-                sorted_res.remove(table[0])
-            except ValueError:
-                pass
+                if tables is not None:
+                    for t in tables:
+                        sorted_tables.remove(t)
+                    packed_tables.append((res, tables))
+            for table in packed_tables:
+                try:
+                    sorted_res.remove(table[0])
+                except ValueError:
+                    pass
 
     if len(sorted_res) == 0:
         return packed_tables
@@ -48,7 +49,8 @@ def pack_table(reservation_list, table_list):
     raise UnableToPackTablesError()
 
 
-def match_tables_to_reservation(reservation, table_list, max_tables):
+def match_tables_to_reservation(
+        reservation, table_list, max_tables, allow_table_error=False):
 
     def table_indexes_gen(length_of_list, num_of_tables):
         if length_of_list > 0 and num_of_tables > 0:
@@ -73,8 +75,12 @@ def match_tables_to_reservation(reservation, table_list, max_tables):
             yield [table_list[i] for i in indexes]
 
     for tables in tables_gen(table_list, min(max_tables, len(table_list))):
-        if reservation.people == sum(tables):
-            return tuple(tables)
+        if allow_table_error:
+            if reservation.people <= sum(tables):
+                return tuple(tables)
+        else:
+            if reservation.people == sum(tables):
+                return tuple(tables)
 
     return None
 

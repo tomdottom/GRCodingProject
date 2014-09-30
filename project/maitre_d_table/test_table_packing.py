@@ -1,6 +1,6 @@
 from django.test import TransactionTestCase
 
-from reserve_table import pack_table, UnableToPackTablesError
+from reserve_table import pack_tables, UnableToPackTablesError
 
 
 class MockReservation(object):
@@ -19,7 +19,7 @@ class TestPackTable(TransactionTestCase):
         reservation_list = create_reservation_list([2])
         table_list = [2]
 
-        table_seating = pack_table(reservation_list, table_list)
+        table_seating = pack_tables(reservation_list, table_list)
 
         self.assertEqual(
             table_seating,
@@ -30,7 +30,7 @@ class TestPackTable(TransactionTestCase):
         reservation_list = create_reservation_list([2, 4])
         table_list = [2, 4]
 
-        table_seating = pack_table(reservation_list, table_list)
+        table_seating = pack_tables(reservation_list, table_list)
 
         self.assertEqual(
             table_seating,
@@ -44,7 +44,7 @@ class TestPackTable(TransactionTestCase):
         reservation_list = create_reservation_list([2, 4])
         table_list = [3, 2, 5, 4]
 
-        table_seating = pack_table(reservation_list, table_list)
+        table_seating = pack_tables(reservation_list, table_list)
 
         self.assertEqual(
             table_seating,
@@ -54,18 +54,31 @@ class TestPackTable(TransactionTestCase):
             ]
         )
 
+    def test_packs_to_next_biggest_on_single_table(self):
+        reservation_list = create_reservation_list([3])
+        table_list = [4]
+
+        table_seating = pack_tables(reservation_list, table_list)
+
+        self.assertEqual(
+            table_seating,
+            [
+                (reservation_list[0], (4, ))
+            ]
+        )
+
     def test_raises_error_if_insufficient_tables_to_seat_resevations(self):
         reservation_list = create_reservation_list([2, 2, 2])
         table_list = [2, 2]
 
         with self.assertRaises(UnableToPackTablesError):
-            pack_table(reservation_list, table_list)
+            pack_tables(reservation_list, table_list)
 
     def test_packs_to_exact_fit_on_multiple_tables(self):
         reservation_list = create_reservation_list([10, 6])
         table_list = [2, 4, 4, 6]
 
-        table_seating = pack_table(reservation_list, table_list)
+        table_seating = pack_tables(reservation_list, table_list)
 
         self.assertEqual(
             table_seating,
