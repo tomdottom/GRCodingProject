@@ -27,8 +27,11 @@ def pack_tables(reservation_list, table_list):
 
     packed_tables = []
 
+    # increasing spare seats
     for allow_table_error in range(2):
+        # increasing table combinations
         for max_tables in range(1, len(sorted_tables)+1):
+
             for res in sorted_res:
                 tables = match_tables_to_reservation(
                     res, sorted_tables, max_tables, allow_table_error)
@@ -37,6 +40,7 @@ def pack_tables(reservation_list, table_list):
                     for t in tables:
                         sorted_tables.remove(t)
                     packed_tables.append((res, tables))
+
             for table in packed_tables:
                 try:
                     sorted_res.remove(table[0])
