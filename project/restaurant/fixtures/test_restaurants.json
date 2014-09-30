@@ -61,5 +61,68 @@
         "weekday": 7,
         "restaurant": 1
       }
+    },
+    {
+      "model": "restaurant.restaurant",
+      "pk": 2,
+      "fields": {
+        "name": "Odd",
+        "description": "An amazing family run restaurant in Maida Vale",
+        "_tables": "3,5,7"
+      }
+    },
+    {
+      "model": "restaurant.openingtime",
+      "fields": {
+        "fromHour": "11:00:00",
+        "toHour": "22:00:00",
+        "weekday": 2,
+        "restaurant": 2
+      }
+    },
+    {
+      "model": "restaurant.openingtime",
+      "fields": {
+        "fromHour": "11:00:00",
+        "toHour": "22:00:00",
+        "weekday": 3,
+        "restaurant": 2
+      }
+    },
+    {
+      "model": "restaurant.openingtime",
+      "fields": {
+        "fromHour": "11:00:00",
+        "toHour": "22:00:00",
+        "weekday": 4,
+        "restaurant": 2
+      }
+    },
+    {
+      "model": "restaurant.openingtime",
+      "fields": {
+        "fromHour": "10:00:00",
+        "toHour": "23:59:59",
+        "weekday": 5,
+        "restaurant": 2
+      }
+    },
+    {
+      "model": "restaurant.openingtime",
+      "fields": {
+        "fromHour": "10:00:00",
+        "toHour": "23:59:59",
+        "weekday": 6,
+        "restaurant": 2
+      }
+    },
+    {
+      "model": "restaurant.openingtime",
+      "fields": {
+        "fromHour": "10:00:00",
+        "toHour": "23:59:59",
+        "weekday": 7,
+        "restaurant": 2
+      }
     }
 ]

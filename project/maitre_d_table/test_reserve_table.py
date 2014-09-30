@@ -100,7 +100,7 @@ class TestReserveTable(TransactionTestCase):
     def test_can_book_accross_multiple_tables(self):
         time = datetime.datetime(2014, 3, 4, 13, 30)
 
-        reserve_table('Small', time, 2)
-        reservation = reserve_table('Small', time, 10)
+        reserve_table('Odd', time, 7)
+        reservation = reserve_table('Odd', time, 8)
 
         self.assertIsInstance(reservation, int)
