@@ -85,21 +85,6 @@ def match_tables_to_reservation(
     return None
 
 
-def table_available(reservation_list, tables):
-    sorted_tables = sorted(tables)
-    sorted_res = sorted(reservation_list, key=attrgetter('people'))
-
-    try:
-        for res in sorted_res:
-            while res.people > sorted_tables[0]:
-                sorted_tables.pop(0)
-            sorted_tables.pop(0)
-    except IndexError:
-        return False
-
-    return True
-
-
 def reserve_table(restaurant_name, dt, people):
 
     if dt.tzinfo is None:
@@ -130,10 +115,11 @@ def reserve_table(restaurant_name, dt, people):
     if restaurant.is_closed(new_res.endtime):
         raise ReservationNotPossibleError
 
-    if table_available(current_reservations + [new_res], restaurant.tables):
+    try:
+        pack_tables(current_reservations + [new_res], restaurant.tables)
         new_res.save()
         return new_res.id
-    else:
+    except UnableToPackTablesError:
         raise ReservationNotPossibleError(
             "No table large enough is available to accomodate %s people" % (
                 people, )
