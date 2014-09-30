@@ -52,6 +52,15 @@ def pack_tables(reservation_list, table_list):
 def match_tables_to_reservation(
         reservation, table_list, max_tables, allow_table_error=False):
 
+    # generate a sequence of integers to use as index, ie
+    # length_of_list = 5, num_of_tables = 3
+    # [0, 1, 2]
+    # [0, 1, 3]
+    # [0, 1, 4]
+    # [0, 2, 3]
+    # [0, 2, 4]
+    # ....
+    # [2, 3, 4]
     def table_indexes_gen(length_of_list, num_of_tables):
         if length_of_list > 0 and num_of_tables > 0:
             table_indexes = range(num_of_tables)
@@ -69,12 +78,14 @@ def match_tables_to_reservation(
                 else:
                     table_indexes[-1] += 1
 
-    def tables_gen(table_list, num_of_tables):
+    def table_combo_gen(table_list, num_of_tables):
         table_indexes = table_indexes_gen(len(table_list), num_of_tables)
         for indexes in table_indexes:
             yield [table_list[i] for i in indexes]
 
-    for tables in tables_gen(table_list, min(max_tables, len(table_list))):
+    for tables in table_combo_gen(
+            table_list, min(max_tables, len(table_list))):
+
         if allow_table_error:
             if reservation.people <= sum(tables):
                 return tuple(tables)
