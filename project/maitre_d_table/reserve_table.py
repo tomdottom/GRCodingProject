@@ -96,7 +96,7 @@ def match_tables_to_reservation(
     return None
 
 
-def reserve_table(restaurant_name, dt, people):
+def reserve_table(restaurant_name, dt, people, reservation_length_hrs=None):
 
     if dt.tzinfo is None:
         dt = pytz.utc.localize(dt)
@@ -112,10 +112,17 @@ def reserve_table(restaurant_name, dt, people):
 
     current_reservations = restaurant.reservations_ongoing(dt)
 
+    if reservation_length_hrs is None:
+        # 5400 seconds = 1.5hrs
+        _length = 5400
+    else:
+        _length = reservation_length_hrs * 3600
+
     new_res = Reservation(
         restaurant=restaurant,
         datetime=dt,
-        people=people
+        people=people,
+        _length=_length
     )
 
     if restaurant.is_closed(new_res.endtime):

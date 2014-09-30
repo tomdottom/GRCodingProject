@@ -8,6 +8,7 @@ from reserve_table import (
     RestaurantClosedError, NoSuchRestaurantError, ReservationNotPossibleError
 )
 from restaurant.models import Restaurant
+from reservation.models import Reservation
 
 
 class TestReserveTable(TransactionTestCase):
@@ -104,3 +105,15 @@ class TestReserveTable(TransactionTestCase):
         reservation = reserve_table('Odd', time, 8)
 
         self.assertIsInstance(reservation, int)
+
+    def test_can_reserve_a_table_for_custom_length_of_time(self):
+        time = datetime.datetime(2014, 3, 4, 13, 30)
+
+        reservation_id = reserve_table('Odd', time, 8, 5)
+        reservation = Reservation.objects.get(id=reservation_id)
+
+        self.assertEqual(
+            reservation.endtime,
+            datetime.datetime(2014, 3, 4, 18, 30, tzinfo=pytz.utc)
+
+        )

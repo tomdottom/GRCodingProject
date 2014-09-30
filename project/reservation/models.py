@@ -8,8 +8,8 @@ class Reservation(models.Model):
     restaurant = models.ForeignKey(Restaurant, related_name='reservations')
     datetime = models.DateTimeField()
     people = models.IntegerField()
-    _length = timedelta(hours=1.5)
+    _length = models.IntegerField(default=5400) #5400 seconds = 1.5 hours
 
     @property
     def endtime(self):
-        return self.datetime + self._length
+        return self.datetime + timedelta(seconds=self._length)
